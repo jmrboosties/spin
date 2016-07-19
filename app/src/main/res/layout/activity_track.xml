@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="72dp"
+		android:background="#87bbc1">
+
+		<ImageView
+			android:id="@+id/track_image"
+			android:layout_width="72dp"
+			android:layout_height="72dp" />
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="8dp"
+			android:orientation="vertical"
+			android:layout_toRightOf="@id/track_image">
+
+			<TextView
+				android:id="@+id/track_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="4dp"
+				tools:text="Song title"/>
+
+			<TextView
+				android:id="@+id/track_artist"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				tools:text="Artist"/>
+
+		</LinearLayout>
+
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="72dp"
+		android:layout_alignParentBottom="true"
+		android:background="#858aff"
+		android:paddingLeft="8dp"
+		android:paddingRight="8dp">
+
+		<TextView
+			android:id="@+id/time_progress"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			tools:text="0:30"/>
+
+		<TextView
+			android:id="@+id/time_remaining"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_centerVertical="true"
+			tools:text="3:54"/>
+
+		<SeekBar
+			android:id="@+id/progress"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_toLeftOf="@id/time_remaining"
+			android:layout_toRightOf="@id/time_progress"/>
+
+	</RelativeLayout>
+
+</RelativeLayout>

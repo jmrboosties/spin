@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" android:color="@color/ripple_color_for_teal_element">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/big_green_ui_element_shader" />
+        </shape>
+    </item>
+</selector>

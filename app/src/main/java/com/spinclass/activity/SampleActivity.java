@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.spinclass.R;
+import com.spinclass.constant.Constants;
 import com.spinclass.model.SpotifyTrack;
 import com.spinclass.net.SpotifyApiHelper;
 import com.spinclass.net.VolleyContext;
@@ -30,7 +31,6 @@ public class SampleActivity extends AppCompatActivity implements PlayerNotificat
 	private boolean mHasTrackInformation;
 	private boolean mGettingTrackInformation;
 
-	private static final String CLIENT_ID = "4d85fc0699184f09a984618464f93435";
 	private static final String REDIRECT_URI = "spinapptest://callback";
 	private static final int REQUEST_CODE = 1112;
 
@@ -70,7 +70,7 @@ public class SampleActivity extends AppCompatActivity implements PlayerNotificat
 
 			@Override
 			public void onClick(View v) {
-				AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
+				AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(Constants.CLIENT_ID,
 						AuthenticationResponse.Type.TOKEN,
 						REDIRECT_URI);
 
@@ -92,7 +92,8 @@ public class SampleActivity extends AppCompatActivity implements PlayerNotificat
 			if(response.getType() == AuthenticationResponse.Type.TOKEN) {
 				mAccessToken = response.getAccessToken();
 
-				Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
+
+				Config playerConfig = new Config(this, response.getAccessToken(), Constants.CLIENT_ID);
 				Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
 
 					@Override
@@ -161,7 +162,7 @@ public class SampleActivity extends AppCompatActivity implements PlayerNotificat
 				Print.log("getting track information");
 				mGettingTrackInformation = true;
 
-				SpotifyApiHelper helper = new SpotifyApiHelper(this, mAccessToken);
+				SpotifyApiHelper helper = new SpotifyApiHelper(this);
 				helper.getTrackInformation(mCurrentTrack, new VolleyRequestListener<SpotifyTrack>() {
 
 					@Override

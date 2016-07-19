@@ -17,6 +17,9 @@ public class SpotifyTrackDeserializer implements JsonDeserializer<SpotifyTrack> 
 		JsonArray artists = json.getAsJsonObject().getAsJsonArray(FieldNames.ARTISTS);
 		track.setArtist(artists.get(0).getAsJsonObject().getAsJsonPrimitive(FieldNames.NAME).getAsString());
 
+		JsonArray images = json.getAsJsonObject().getAsJsonArray(FieldNames.IMAGES);
+		track.setImageUrl(images.get(0).getAsJsonObject().getAsJsonPrimitive(FieldNames.URL).getAsString());
+
 		return track;
 	}
 

@@ -2,6 +2,7 @@ package com.spinclass.net.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.spinclass.model.SpotifyPlaylist;
 import com.spinclass.model.SpotifyTrack;
 
 public class GsonFactory {
@@ -15,6 +16,9 @@ public class GsonFactory {
 
 		if(classToIgnore != SpotifyTrack.class)
 			builder.registerTypeAdapter(SpotifyTrack.class, new SpotifyTrackDeserializer());
+
+		if(classToIgnore != SpotifyPlaylist.class)
+			builder.registerTypeAdapter(SpotifyPlaylist.class, new SpotifyPlaylistDeserializer());
 
 		return builder.create();
 	}
