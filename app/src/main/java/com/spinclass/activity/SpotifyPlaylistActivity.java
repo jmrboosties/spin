@@ -95,8 +95,23 @@ public class SpotifyPlaylistActivity extends AppCompatActivity implements Volley
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 		mAdapter = new SpotifyPlaylistAdapter(this);
+		mAdapter.setOnPlaylistClickedListener(new SpotifyPlaylistAdapter.OnPlaylistClickedListener() {
+
+			@Override
+			public void onPlaylistClicked(SpotifyPlaylist playlist) {
+				handlePlaylistClick(playlist);
+			}
+
+		});
 
 		recyclerView.setAdapter(mAdapter);
+	}
+
+	private void handlePlaylistClick(SpotifyPlaylist playlist) {
+		Intent intent = new Intent(this, ClassEditorActivity.class);
+		intent.putExtra(Constants.PLAYLIST_TRACKS_URL, playlist.getTracksUrl());
+
+		startActivity(intent);
 	}
 
 	public void fetchPlaylistsFromSpotify() {
@@ -120,6 +135,10 @@ public class SpotifyPlaylistActivity extends AppCompatActivity implements Volley
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				Print.log("error fetching playlists");
+				if(error.networkResponse.statusCode == 401) {
+					Preferences.getInstance().clearSpotifyPrefs();
+					connectToSpotifyIfNecessary();
+				}
 			}
 
 		};

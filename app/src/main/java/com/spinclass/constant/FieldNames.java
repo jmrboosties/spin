@@ -16,5 +16,6 @@ public class FieldNames {
 	public static final String TRACKS = "tracks";
 	public static final String TOTAL = "total";
 	public static final String HREF = "href";
+	public static final String TRACK = "track";
 
 }

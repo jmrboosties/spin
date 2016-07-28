@@ -39,4 +39,32 @@ public class Tables {
 
 	}
 
+	public static final class Classes {
+
+		public static final String TABLE_NAME = "classes";
+
+		//uri and MIME type
+		public static final Uri CONTENT_URI = Uri.parse("content://" + DatabaseProvider.AUTHORITY + "/" + TABLE_NAME);
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.BIT." + TABLE_NAME;
+
+		public static final String ID = "id";
+		public static final String CREATED_AT = "created_at";
+		public static final String TITLE = "title";
+
+	}
+
+	public static final class ClassTracks {
+
+		public static final String TABLE_NAME = "classes";
+
+		//uri and MIME type
+		public static final Uri CONTENT_URI = Uri.parse("content://" + DatabaseProvider.AUTHORITY + "/" + TABLE_NAME);
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.BIT." + TABLE_NAME;
+
+		public static final String CLASS_ID = "class_id";
+		public static final String TRACK_ID = "track_id";
+		public static final String ORDER = "order";
+
+	}
+
 }

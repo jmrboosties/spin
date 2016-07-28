@@ -20,13 +20,13 @@ public class SpotifyPlaylist {
 
 	private String mTracksUrl;
 
-	private ArrayList<SpotifyTrack> mSpotifyTracks = new ArrayList<>();
+	private ArrayList<SpotifyPlaylistTrack> mSpotifyTracks = new ArrayList<>();
 
-	public ArrayList<SpotifyTrack> getSpotifyTracks() {
+	public ArrayList<SpotifyPlaylistTrack> getSpotifyTracks() {
 		return mSpotifyTracks;
 	}
 
-	public void setSpotifyTracks(ArrayList<SpotifyTrack> spotifyTracks) {
+	public void setSpotifyTracks(ArrayList<SpotifyPlaylistTrack> spotifyTracks) {
 		mSpotifyTracks = spotifyTracks;
 	}
 

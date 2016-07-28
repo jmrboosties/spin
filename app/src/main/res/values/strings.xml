@@ -2,5 +2,6 @@
 	<string name="app_name">SpinClass</string>
 
 	<string name="track_count">%s tracks</string>
+	<string name="notes">notes</string>
 
 </resources>

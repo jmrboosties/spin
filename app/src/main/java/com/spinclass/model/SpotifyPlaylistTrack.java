@@ -2,26 +2,19 @@ package com.spinclass.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.google.gson.annotations.SerializedName;
-import com.spinclass.constant.FieldNames;
 
-public class SpotifyTrack implements Parcelable {
+public class SpotifyPlaylistTrack implements Parcelable {
 
-	@SerializedName(FieldNames.NAME)
 	private String mName;
-
 	private String mArtist;
-
-	private String mImageUrl;
-
-	@SerializedName(FieldNames.DURATION_MS)
 	private long mDuration;
+	private String mUri;
 
-	protected SpotifyTrack(Parcel in) {
+	protected SpotifyPlaylistTrack(Parcel in) {
 		mName = in.readString();
 		mArtist = in.readString();
 		mDuration = in.readLong();
-		mImageUrl = in.readString();
+		mUri = in.readString();
 	}
 
 	@Override
@@ -29,7 +22,7 @@ public class SpotifyTrack implements Parcelable {
 		dest.writeString(mName);
 		dest.writeString(mArtist);
 		dest.writeLong(mDuration);
-		dest.writeString(mImageUrl);
+		dest.writeString(mUri);
 	}
 
 	@Override
@@ -37,16 +30,16 @@ public class SpotifyTrack implements Parcelable {
 		return 0;
 	}
 
-	public static final Creator<SpotifyTrack> CREATOR = new Creator<SpotifyTrack>() {
+	public static final Creator<SpotifyPlaylistTrack> CREATOR = new Creator<SpotifyPlaylistTrack>() {
 
 		@Override
-		public SpotifyTrack createFromParcel(Parcel in) {
-			return new SpotifyTrack(in);
+		public SpotifyPlaylistTrack createFromParcel(Parcel in) {
+			return new SpotifyPlaylistTrack(in);
 		}
 
 		@Override
-		public SpotifyTrack[] newArray(int size) {
-			return new SpotifyTrack[size];
+		public SpotifyPlaylistTrack[] newArray(int size) {
+			return new SpotifyPlaylistTrack[size];
 		}
 	};
 
@@ -74,11 +67,11 @@ public class SpotifyTrack implements Parcelable {
 		mDuration = duration;
 	}
 
-	public String getImageUrl() {
-		return mImageUrl;
+	public String getUri() {
+		return mUri;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		mImageUrl = imageUrl;
+	public void setUri(String uri) {
+		mUri = uri;
 	}
 }

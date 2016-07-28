@@ -1,6 +1,7 @@
 package com.spinclass.net;
 
-import com.spinclass.model.SpotifyTrack;
+import com.spinclass.model.SpotifyPlaylistTrack;
+import com.spinclass.net.model.GetSpotifyPlaylistTracksResponse;
 import com.spinclass.net.model.GetSpotifyPlaylistsResponse;
 import com.spinclass.net.model.SpotifyMe;
 import com.spinclass.preference.Preferences;
@@ -25,7 +26,7 @@ public class SpotifyApiHelper {
 		mUserId = Preferences.getInstance().getSpotifyUserId();
 	}
 
-	public void getTrackInformation(String trackUri, VolleyRequestListener<SpotifyTrack> listener) {
+	public void getTrackInformation(String trackUri, VolleyRequestListener<SpotifyPlaylistTrack> listener) {
 		String[] split = trackUri.split(":");
 		String trackId = split[split.length - 1];
 
@@ -33,7 +34,7 @@ public class SpotifyApiHelper {
 
 		Print.log("get track information url", url);
 
-		SpotifyVolleyRequester requester = new SpotifyVolleyRequester(mVolleyContext, mAccessToken, SpotifyTrack.class);
+		SpotifyVolleyRequester requester = new SpotifyVolleyRequester(mVolleyContext, mAccessToken, SpotifyPlaylistTrack.class);
 		requester.makeGetRequest(url, listener);
 	}
 
@@ -59,6 +60,18 @@ public class SpotifyApiHelper {
 		Print.log("get me url", url);
 
 		SpotifyVolleyRequester requester = new SpotifyVolleyRequester(mVolleyContext, mAccessToken, SpotifyMe.class);
+		requester.makeGetRequest(url, listener);
+	}
+
+	public void getPlaylistTracks(String playlistId, int offset, VolleyRequestListener<GetSpotifyPlaylistTracksResponse> listener) {
+		String url = BASE_URL + "users/" + Preferences.getInstance().getSpotifyUserId() + "/playlists/" + playlistId + "/tracks?offset=" + offset + "&limit=100";
+		getPlaylistTracks(url, listener);
+	}
+
+	public void getPlaylistTracks(String url, VolleyRequestListener<GetSpotifyPlaylistTracksResponse> listener) {
+		Print.log("get playlist tracks url", url);
+
+		SpotifyVolleyRequester requester = new SpotifyVolleyRequester(mVolleyContext, mAccessToken, GetSpotifyPlaylistTracksResponse.class);
 		requester.makeGetRequest(url, listener);
 	}
 

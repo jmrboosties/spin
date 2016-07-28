@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="96dp"
+	android:padding="8dp"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<ImageView
+		android:id="@+id/lst_image"
+		android:layout_width="88dp"
+		android:layout_height="88dp"
+		android:background="#1cb62a"/>
+
+	<LinearLayout
+		android:id="@+id/lst_notes_count_container"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:layout_centerVertical="true"
+		android:layout_alignParentRight="true"
+		android:gravity="center_horizontal">
+
+		<TextView
+			android:id="@+id/lst_notes_count"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@android:color/black"
+			android:textSize="20dp"
+			tools:text="4"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@android:color/black"
+			android:textSize="12dp"
+			android:text="@string/notes"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:layout_centerVertical="true"
+		android:layout_toLeftOf="@id/lst_notes_count_container"
+		android:layout_toRightOf="@id/lst_image"
+		android:layout_marginLeft="8dp">
+
+		<TextView
+			android:id="@+id/lst_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@android:color/black"
+			android:textSize="20dp"
+			tools:text="Song title"/>
+
+		<TextView
+			android:id="@+id/lst_subtitle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="4dp"
+			android:textColor="@android:color/black"
+			android:textSize="16dp"
+			tools:text="Artist name"/>
+
+	</LinearLayout>
+
+</RelativeLayout>

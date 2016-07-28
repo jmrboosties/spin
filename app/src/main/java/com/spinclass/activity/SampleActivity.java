@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.spinclass.R;
 import com.spinclass.constant.Constants;
-import com.spinclass.model.SpotifyTrack;
+import com.spinclass.model.SpotifyPlaylistTrack;
 import com.spinclass.net.SpotifyApiHelper;
 import com.spinclass.net.VolleyContext;
 import com.spinclass.net.VolleyRequestListener;
@@ -163,10 +163,10 @@ public class SampleActivity extends AppCompatActivity implements PlayerNotificat
 				mGettingTrackInformation = true;
 
 				SpotifyApiHelper helper = new SpotifyApiHelper(this);
-				helper.getTrackInformation(mCurrentTrack, new VolleyRequestListener<SpotifyTrack>() {
+				helper.getTrackInformation(mCurrentTrack, new VolleyRequestListener<SpotifyPlaylistTrack>() {
 
 					@Override
-					public void onResponse(SpotifyTrack response) {
+					public void onResponse(SpotifyPlaylistTrack response) {
 						mHasTrackInformation = true;
 						mTextView.setText(response.getName() + " by " + response.getArtist());
 

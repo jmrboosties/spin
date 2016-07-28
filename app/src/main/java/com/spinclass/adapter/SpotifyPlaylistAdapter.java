@@ -16,6 +16,8 @@ public class SpotifyPlaylistAdapter extends RecyclerView.Adapter {
 	private Context mContext;
 	private ArrayList<SpotifyPlaylist> mSpotifyPlaylists = new ArrayList<>();
 
+	private OnPlaylistClickedListener mOnPlaylistClickedListener;
+
 	public SpotifyPlaylistAdapter(Context context) {
 		mContext = context;
 	}
@@ -41,6 +43,10 @@ public class SpotifyPlaylistAdapter extends RecyclerView.Adapter {
 		notifyDataSetChanged();
 	}
 
+	public void setOnPlaylistClickedListener(OnPlaylistClickedListener onPlaylistClickedListener) {
+		mOnPlaylistClickedListener = onPlaylistClickedListener;
+	}
+
 	public class SpotifyPlaylistViewHolder extends RecyclerView.ViewHolder {
 
 		private TextView mTitle;
@@ -51,12 +57,28 @@ public class SpotifyPlaylistAdapter extends RecyclerView.Adapter {
 
 			mTitle = (TextView) itemView.findViewById(R.id.lsp_title);
 			mSubtitle = (TextView) itemView.findViewById(R.id.lsp_subtitle);
+
+			itemView.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if(mOnPlaylistClickedListener != null)
+						mOnPlaylistClickedListener.onPlaylistClicked(mSpotifyPlaylists.get(getAdapterPosition()));
+				}
+
+			});
 		}
 
 		public void buildItem() {
 			mTitle.setText(mSpotifyPlaylists.get(getAdapterPosition()).getName());
 			mSubtitle.setText(mContext.getString(R.string.track_count, mSpotifyPlaylists.get(getAdapterPosition()).getTrackCount()));
 		}
+
+	}
+
+	public interface OnPlaylistClickedListener {
+
+		void onPlaylistClicked(SpotifyPlaylist playlist);
 
 	}
 

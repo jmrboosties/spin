@@ -40,4 +40,9 @@ public class Preferences extends AbsPreferences {
 		return getStringPref(SPOTIFY_USER_ID);
 	}
 
+	public void clearSpotifyPrefs() {
+		clearPref(SPOTIFY_ACCESS_TOKEN);
+		clearPref(SPOTIFY_USER_ID);
+	}
+
 }
