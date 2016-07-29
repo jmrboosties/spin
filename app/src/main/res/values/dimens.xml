@@ -4,4 +4,6 @@
 	<dimen name="floating_action_button_size">56dp</dimen>
 	<dimen name="floating_action_button_margins">16dp</dimen>
 
+	<dimen name="class_note_icon_size">24dp</dimen>
+
 </resources>

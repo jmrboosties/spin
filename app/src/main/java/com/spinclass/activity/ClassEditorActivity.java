@@ -3,7 +3,13 @@ package com.spinclass.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import com.android.volley.VolleyError;
@@ -11,6 +17,9 @@ import com.spinclass.R;
 import com.spinclass.adapter.SpotifyTracksAdapter;
 import com.spinclass.base.BaseActivity;
 import com.spinclass.constant.Constants;
+import com.spinclass.dialog.NewMoveDialogBuilder;
+import com.spinclass.interfaces.ClassNote;
+import com.spinclass.model.Move;
 import com.spinclass.model.SpotifyPlaylistTrack;
 import com.spinclass.net.SpotifyApiHelper;
 import com.spinclass.net.VolleyRequestListener;
@@ -28,10 +37,13 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 	private SeekBar mSeekBar;
 	private TextView mTimeProgress;
 	private TextView mDuration;
+	private RelativeLayout mPlayerSection;
 
 	private Player mPlayer;
 	private String mPlaylistTracksUrl;
 	private SpotifyTracksAdapter mTracksAdapter;
+
+	private SpotifyPlaylistTrack mCurrentTrack;
 
 	private ArrayList<SpotifyPlaylistTrack> mPlaylistTracks = new ArrayList<>();
 
@@ -68,6 +80,8 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 	}
 
 	private void initLayout() {
+		mPlayerSection = (RelativeLayout) findViewById(R.id.player_section);
+
 		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.tracks_list);
 
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -89,6 +103,90 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 		mSeekBar = (SeekBar) findViewById(R.id.progress);
 		mTimeProgress = (TextView) findViewById(R.id.time_progress);
 		mDuration = (TextView) findViewById(R.id.time_remaining);
+
+		ImageView newButton = (ImageView) findViewById(R.id.add);
+
+		final PopupMenu popupMenu = new PopupMenu(this, newButton);
+		popupMenu.inflate(R.menu.new_class_note);
+
+		newButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Print.log("new button clicked");
+				popupMenu.show();
+			}
+
+		});
+
+		popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				mPlayer.pause();
+
+				switch(item.getItemId()) {
+					case R.id.new_move :
+						openNewMoveDialog();
+						return true;
+					case R.id.new_fadeout :
+
+						return true;
+					default :
+						return false;
+				}
+			}
+		});
+	}
+
+	private void openNewMoveDialog() {
+		mPlayer.getPlayerState(new PlayerStateCallback() {
+
+			@Override
+			public void onPlayerState(PlayerState playerState) {
+				String currentTime = Helpbot.getDurationTimestampFromMillis(playerState.positionInMs);
+
+				NewMoveDialogBuilder builder = new NewMoveDialogBuilder(ClassEditorActivity.this, currentTime, new NewMoveDialogBuilder.OnConfirmClickListener() {
+
+					@Override
+					public void onConfirmClicked(String time, String description) {
+						Move move = new Move();
+						move.setDescription(description);
+						move.setTimeStamp(Helpbot.getMillisFromTimestamp(time));
+
+						mCurrentTrack.addClassNote(move);
+						addClassNoteToPlayer(move);
+					}
+
+				});
+
+				mAlertDialog = builder.build();
+				mAlertDialog.show();
+			}
+
+		});
+	}
+
+	private void addClassNoteToPlayer(ClassNote classNote) {
+		ImageView iv = new ImageView(this);
+		iv.setImageResource(R.drawable.ic_edit_location_white_24dp);
+
+		int classNoteIconSize = (int) getResources().getDimension(R.dimen.class_note_icon_size);
+
+		ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(classNoteIconSize, classNoteIconSize);
+		iv.setLayoutParams(params);
+
+		mPlayerSection.addView(iv);
+
+		float topSeekBarY = mSeekBar.getY();
+
+		float seekBarStartX = mSeekBar.getLeft();
+		float seekBarLength = mSeekBar.getWidth();
+
+		float progressAsPercentage = seekBarLength * ((mSeekBar.getMax() - (mSeekBar.getMax() - classNote.getTimestamp())) / mSeekBar.getMax());
+
+		iv.setX(seekBarStartX + progressAsPercentage);
+		iv.setY(topSeekBarY);
 	}
 
 	private void getPlaylistTracks() {
@@ -168,10 +266,26 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 		mTimeProgress.setText(Helpbot.getDurationTimestampFromMillis(playerState.positionInMs));
 		mDuration.setText(Helpbot.getDurationTimestampFromMillis(playerState.durationInMs));
 
+		if(mCurrentTrack == null || eventType == EventType.TRACK_CHANGED)
+			mCurrentTrack = getTrackFromUri(playerState.trackUri);
+
+		if(mCurrentTrack == null) {
+			//TODO FUCK
+		}
+
 		if(eventType == EventType.PLAY) {
 			generateNewPlayerProgressHandler();
 			mPlayerProgressHandler.execute();
 		}
+	}
+
+	private SpotifyPlaylistTrack getTrackFromUri(String uri) {
+		for(SpotifyPlaylistTrack track : mPlaylistTracks) {
+			if(track.getUri().equals(uri))
+				return track;
+		}
+
+		return null;
 	}
 
 	private void generateNewPlayerProgressHandler() {
@@ -238,6 +352,7 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 
 	@Override
 	public void onDestroy() {
+		cancelPlayerProgressHandler();
 		Spotify.destroyPlayer(this);
 		super.onDestroy();
 	}

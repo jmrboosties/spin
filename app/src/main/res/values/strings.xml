@@ -4,4 +4,9 @@
 	<string name="track_count">%s tracks</string>
 	<string name="notes">notes</string>
 
+	<string name="new_move">New Move</string>
+	<string name="new_fadeout">New Fadeout</string>
+	<string name="description">Description</string>
+	<string name="new_move_hint">Describe the move here. Try using a brief name you can catch at a glance!</string>
+
 </resources>

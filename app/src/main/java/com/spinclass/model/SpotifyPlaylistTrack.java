@@ -2,6 +2,10 @@ package com.spinclass.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import com.spinclass.interfaces.ClassNote;
+
+import java.util.ArrayList;
 
 public class SpotifyPlaylistTrack implements Parcelable {
 
@@ -9,6 +13,8 @@ public class SpotifyPlaylistTrack implements Parcelable {
 	private String mArtist;
 	private long mDuration;
 	private String mUri;
+
+	private ArrayList<ClassNote> mClassNotes = new ArrayList<>();
 
 	protected SpotifyPlaylistTrack(Parcel in) {
 		mName = in.readString();
@@ -74,4 +80,20 @@ public class SpotifyPlaylistTrack implements Parcelable {
 	public void setUri(String uri) {
 		mUri = uri;
 	}
+
+	public ArrayList<ClassNote> getClassNotes() {
+		return mClassNotes;
+	}
+
+	public void addClassNote(ClassNote classNote) {
+		if(mClassNotes == null)
+			mClassNotes = new ArrayList<>();
+
+		mClassNotes.add(classNote);
+	}
+
+	public void setClassNotes(@NonNull ArrayList<ClassNote> classNotes) {
+		mClassNotes = classNotes;
+	}
+
 }
