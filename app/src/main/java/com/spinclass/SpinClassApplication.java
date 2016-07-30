@@ -10,5 +10,7 @@ public class SpinClassApplication extends Application {
 		super.onCreate();
 
 		Preferences.initialize(this);
+
+//		Kahlo.initialize(new UILImgProvider());
 	}
 }

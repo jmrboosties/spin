@@ -23,8 +23,8 @@ public class SpotifyPlaylistTrackDeserializer implements JsonDeserializer<Spotif
 		track.setDuration(trackJson.getAsJsonPrimitive(FieldNames.DURATION_MS).getAsLong());
 		track.setUri(trackJson.getAsJsonPrimitive(FieldNames.URI).getAsString());
 
-//		JsonArray images = trackJson.getAsJsonObject().getAsJsonArray(FieldNames.IMAGES);
-//		track.setImageUrl(images.get(0).getAsJsonObject().getAsJsonPrimitive(FieldNames.URL).getAsString());
+		JsonArray images = trackJson.getAsJsonObject(FieldNames.ALBUM).getAsJsonArray(FieldNames.IMAGES);
+		track.setImageUrl(images.get(0).getAsJsonObject().getAsJsonPrimitive(FieldNames.URL).getAsString());
 
 		return track;
 	}

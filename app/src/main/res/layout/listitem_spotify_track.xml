@@ -7,9 +7,33 @@
 
 	<ImageView
 		android:id="@+id/lst_image"
+		android:layout_width="match_parent"
+		android:layout_height="96dp"
+		android:alpha="0.5"/>
+
+	<LinearLayout
+		android:id="@+id/lst_left_section"
 		android:layout_width="88dp"
 		android:layout_height="88dp"
-		android:background="#1cb62a"/>
+		android:orientation="vertical"
+		android:gravity="center">
+
+		<TextView
+			android:id="@+id/lst_order"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="48dp"
+			android:textColor="#1cb62a"
+			tools:text="2"/>
+
+		<TextView
+			android:id="@+id/lst_duration"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="12dp"
+			tools:text="3:32"/>
+
+	</LinearLayout>
 
 	<LinearLayout
 		android:id="@+id/lst_notes_count_container"
@@ -43,7 +67,7 @@
 		android:orientation="vertical"
 		android:layout_centerVertical="true"
 		android:layout_toLeftOf="@id/lst_notes_count_container"
-		android:layout_toRightOf="@id/lst_image"
+		android:layout_toRightOf="@id/lst_left_section"
 		android:layout_marginLeft="8dp">
 
 		<TextView

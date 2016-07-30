@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 	private TextView mTimeProgress;
 	private TextView mDuration;
 	private RelativeLayout mPlayerSection;
+	private RelativeLayout mSeekSection;
 
 	private Player mPlayer;
 	private String mPlaylistTracksUrl;
@@ -81,10 +83,39 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 
 	private void initLayout() {
 		mPlayerSection = (RelativeLayout) findViewById(R.id.player_section);
+		mSeekSection = (RelativeLayout) findViewById(R.id.seek_container);
 
 		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.tracks_list);
 
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+		final ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+
+			@Override
+			public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+				return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
+			}
+
+			@Override
+			public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+				mTracksAdapter.swapItems(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+				return true;
+			}
+
+			@Override
+			public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+			}
+
+			@Override
+			public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+				super.clearView(recyclerView, viewHolder);
+				mTracksAdapter.onSwapComplete();
+			}
+
+		});
+
+		itemTouchHelper.attachToRecyclerView(recyclerView);
 
 		mTracksAdapter = new SpotifyTracksAdapter(this);
 		mTracksAdapter.setTrackClickListener(new SpotifyTracksAdapter.OnSpotifyPlaylistTrackClickListener() {
@@ -155,7 +186,12 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 						move.setTimeStamp(Helpbot.getMillisFromTimestamp(time));
 
 						mCurrentTrack.addClassNote(move);
+						mTracksAdapter.notifyItemChanged(mPlaylistTracks.indexOf(mCurrentTrack));
+
 						addClassNoteToPlayer(move);
+
+						//Resume
+						mPlayer.resume();
 					}
 
 				});
@@ -178,15 +214,24 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 
 		mPlayerSection.addView(iv);
 
-		float topSeekBarY = mSeekBar.getY();
+		float topSeekBarY = mSeekBar.getY() + mSeekSection.getY();
 
 		float seekBarStartX = mSeekBar.getLeft();
 		float seekBarLength = mSeekBar.getWidth();
 
-		float progressAsPercentage = seekBarLength * ((mSeekBar.getMax() - (mSeekBar.getMax() - classNote.getTimestamp())) / mSeekBar.getMax());
+		float progressAsPercentage = seekBarLength * classNote.getTimestamp() / mSeekBar.getMax();
 
-		iv.setX(seekBarStartX + progressAsPercentage);
-		iv.setY(topSeekBarY);
+		//Set progress to match classnote timestamp so it doesn't look off
+		mSeekBar.setProgress((int) classNote.getTimestamp());
+
+		float x = seekBarStartX + progressAsPercentage;
+		float xPlusPadding = x + mSeekBar.getPaddingLeft();
+		float xPlusPaddingCenterIcon = xPlusPadding - (classNoteIconSize / 2);
+
+		Print.log("values", x, xPlusPadding, xPlusPaddingCenterIcon);
+
+		iv.setX(xPlusPaddingCenterIcon);
+		iv.setY(topSeekBarY - classNoteIconSize);
 	}
 
 	private void getPlaylistTracks() {

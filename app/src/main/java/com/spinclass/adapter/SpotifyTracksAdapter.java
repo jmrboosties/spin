@@ -8,13 +8,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.spinclass.R;
 import com.spinclass.model.SpotifyPlaylistTrack;
+import com.spinclass.util.Helpbot;
+import com.spinclass.util.Print;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 
 public class SpotifyTracksAdapter extends RecyclerView.Adapter {
 
 	private Context mContext;
 	private ArrayList<SpotifyPlaylistTrack> mSpotifyTracks = new ArrayList<>();
+
+	private HashSet<Integer> mChangedPositions = new HashSet<>();
 
 	private OnSpotifyPlaylistTrackClickListener mTrackClickListener;
 
@@ -27,6 +33,24 @@ public class SpotifyTracksAdapter extends RecyclerView.Adapter {
 		mSpotifyTracks.addAll(spotifyTracks);
 
 		notifyDataSetChanged();
+	}
+
+	public void swapItems(int position1, int position2) {
+		Print.log("swapping positions", position1, position2);
+
+		Collections.swap(mSpotifyTracks, position1, position2);
+
+		notifyItemMoved(position1, position2);
+
+		mChangedPositions.add(position1);
+		mChangedPositions.add(position2);
+	}
+
+	public void onSwapComplete() {
+		for(Integer i : mChangedPositions)
+			notifyItemChanged(i);
+
+		mChangedPositions.clear();
 	}
 
 	@Override
@@ -54,6 +78,8 @@ public class SpotifyTracksAdapter extends RecyclerView.Adapter {
 		private TextView mTitle;
 		private TextView mArtist;
 		private TextView mNotesCount;
+		private TextView mOrder;
+		private TextView mDuration;
 
 		public TrackViewHolder(View itemView) {
 			super(itemView);
@@ -61,6 +87,8 @@ public class SpotifyTracksAdapter extends RecyclerView.Adapter {
 			mTitle = (TextView) itemView.findViewById(R.id.lst_title);
 			mArtist = (TextView) itemView.findViewById(R.id.lst_subtitle);
 			mNotesCount = (TextView) itemView.findViewById(R.id.lst_notes_count);
+			mOrder = (TextView) itemView.findViewById(R.id.lst_order);
+			mDuration = (TextView) itemView.findViewById(R.id.lst_duration);
 
 			itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -76,7 +104,11 @@ public class SpotifyTracksAdapter extends RecyclerView.Adapter {
 		public void buildItem() {
 			mTitle.setText(mSpotifyTracks.get(getAdapterPosition()).getName());
 			mArtist.setText(mSpotifyTracks.get(getAdapterPosition()).getArtist());
-			mNotesCount.setText("0");
+			mNotesCount.setText(String.valueOf(mSpotifyTracks.get(getAdapterPosition()).getClassNotes().size()));
+			mOrder.setText(String.valueOf(getAdapterPosition() + 1));
+			mDuration.setText(Helpbot.getDurationTimestampFromMillis(mSpotifyTracks.get(getAdapterPosition()).getDuration()));
+
+//			Kahlo.with(mContext).matrixCenterTop().source(mSpotifyTracks.get(getAdapterPosition()).getImageUrl());
 		}
 
 	}
