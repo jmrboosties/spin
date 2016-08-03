@@ -6,4 +6,8 @@
 
 	<color name="big_green_ui_element_shader">#0fa59b</color>
 	<color name="ripple_color_for_teal_element">#44ffffff</color>
+
+	<color name="alpha_red">#77bc3e1a</color>
+	<color name="alpha_white">#77ffffff</color>
+
 </resources>

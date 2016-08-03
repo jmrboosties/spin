@@ -2,6 +2,7 @@ package com.spinclass.activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -9,10 +10,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.view.ViewTreeObserver;
+import android.widget.*;
 import com.android.volley.VolleyError;
 import com.spinclass.R;
 import com.spinclass.adapter.SpotifyTracksAdapter;
@@ -40,6 +39,7 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 	private TextView mDuration;
 	private RelativeLayout mPlayerSection;
 	private RelativeLayout mSeekSection;
+	private FrameLayout mNotesContainer;
 
 	private Player mPlayer;
 	private String mPlaylistTracksUrl;
@@ -168,6 +168,72 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 				}
 			}
 		});
+
+		//Set up seekbar to respond to moving it around
+		mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				if(fromUser)
+					mTimeProgress.setText(Helpbot.getDurationTimestampFromMillis(progress));
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				Print.log("on start tracking touch");
+				//Stop the seekbar from updating from player
+				cancelPlayerProgressHandler();
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				Print.log("on stop tracking touch");
+				int progress = seekBar.getProgress();
+
+				//Set player to start from here
+				mPlayer.seekToPosition(progress);
+
+//				Start progress handler again
+//				generateNewPlayerProgressHandler();
+//				mPlayerProgressHandler.execute();
+			}
+
+		});
+
+		//Create container view for note bubbles
+		mNotesContainer = new FrameLayout(this);
+		mSeekSection.addView(mNotesContainer);
+
+		//TODO remove
+		mNotesContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.alpha_red));
+
+		mNotesContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+			@Override
+			public void onGlobalLayout() {
+				resizeNotesContainer();
+
+				mNotesContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+			}
+
+		});
+	}
+
+	private void resizeNotesContainer() {
+		int sliderBoundsLeft = mSeekBar.getLeft();
+		int sliderBoundsRight = mSeekBar.getRight();
+
+		Print.log("slider left right bounds", sliderBoundsLeft, sliderBoundsRight);
+
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(sliderBoundsRight - sliderBoundsLeft, mSeekBar.getHeight() * 2);
+		params.addRule(RelativeLayout.ALIGN_BOTTOM, mSeekBar.getId());
+		params.addRule(RelativeLayout.ALIGN_LEFT, mSeekBar.getId());
+		params.bottomMargin = mSeekBar.getHeight() / 2;
+
+		mNotesContainer.setPadding(mSeekBar.getPaddingLeft(), 0, mSeekBar.getPaddingRight(), 0);
+
+		mNotesContainer.setLayoutParams(params);
+		mNotesContainer.requestLayout();
 	}
 
 	private void openNewMoveDialog() {
@@ -206,33 +272,38 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 	private void addClassNoteToPlayer(ClassNote classNote) {
 		ImageView iv = new ImageView(this);
 		iv.setImageResource(R.drawable.ic_edit_location_white_24dp);
+		iv.setBackgroundColor(ContextCompat.getColor(this, R.color.alpha_white));
 
 		int classNoteIconSize = (int) getResources().getDimension(R.dimen.class_note_icon_size);
 
 		ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(classNoteIconSize, classNoteIconSize);
 		iv.setLayoutParams(params);
 
-		mPlayerSection.addView(iv);
+		mNotesContainer.addView(iv);
 
 		float topSeekBarY = mSeekBar.getY() + mSeekSection.getY();
 
 		float seekBarStartX = mSeekBar.getLeft();
 		float seekBarLength = mSeekBar.getWidth();
 
-		float progressAsPercentage = seekBarLength * classNote.getTimestamp() / mSeekBar.getMax();
+		float progressAsPercentage = seekBarLength * modifier;//classNote.getTimestamp() / mSeekBar.getMax();
+
+		//Remove just testing
+		modifier += .25f;
+		modifier = Math.min(modifier, 1f);
 
 		//Set progress to match classnote timestamp so it doesn't look off
 		mSeekBar.setProgress((int) classNote.getTimestamp());
 
-		float x = seekBarStartX + progressAsPercentage;
-		float xPlusPadding = x + mSeekBar.getPaddingLeft();
-		float xPlusPaddingCenterIcon = xPlusPadding - (classNoteIconSize / 2);
+		float xMinusCenterIcon = progressAsPercentage - (classNoteIconSize / 2);
 
-		Print.log("values", x, xPlusPadding, xPlusPaddingCenterIcon);
+		Print.log("values", progressAsPercentage, xMinusCenterIcon);
 
-		iv.setX(xPlusPaddingCenterIcon);
-		iv.setY(topSeekBarY - classNoteIconSize);
+		iv.setX(progressAsPercentage);
+		iv.setY(0);
 	}
+
+	private static float modifier = 0f;
 
 	private void getPlaylistTracks() {
 		getPlaylistTracks(mPlaylistTracksUrl);
@@ -269,8 +340,6 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 
 	private void playTrack(SpotifyPlaylistTrack track) {
 		mPlayer.play(track.getUri());
-
-
 	}
 
 	@Override
@@ -311,6 +380,9 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 		mTimeProgress.setText(Helpbot.getDurationTimestampFromMillis(playerState.positionInMs));
 		mDuration.setText(Helpbot.getDurationTimestampFromMillis(playerState.durationInMs));
 
+		//Resize notes container
+		resizeNotesContainer();
+
 		if(mCurrentTrack == null || eventType == EventType.TRACK_CHANGED)
 			mCurrentTrack = getTrackFromUri(playerState.trackUri);
 
@@ -318,9 +390,14 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 			//TODO FUCK
 		}
 
-		if(eventType == EventType.PLAY) {
+		if(eventType == EventType.PLAY || playerState.playing) {
+			Print.log("starting progress handler");
+
 			generateNewPlayerProgressHandler();
 			mPlayerProgressHandler.execute();
+		}
+		else if(eventType == EventType.LOST_PERMISSION) {
+			//TODO toast saying they lost a permission probably due to playing on another device
 		}
 	}
 
@@ -386,13 +463,10 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 
 	}
 
-	private void onPlayerStoppedPlaying() {
-		cancelPlayerProgressHandler();
-	}
-
 	@Override
 	public void onPlaybackError(ErrorType errorType, String s) {
-
+		Print.log("playback error", s);
+		Print.log("playback error type", errorType.toString());
 	}
 
 	@Override
