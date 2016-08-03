@@ -2,7 +2,6 @@ package com.spinclass.activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +19,7 @@ import com.spinclass.constant.Constants;
 import com.spinclass.dialog.NewMoveDialogBuilder;
 import com.spinclass.interfaces.ClassNote;
 import com.spinclass.model.Move;
+import com.spinclass.model.SpotifyAudioFeatures;
 import com.spinclass.model.SpotifyPlaylistTrack;
 import com.spinclass.net.SpotifyApiHelper;
 import com.spinclass.net.VolleyRequestListener;
@@ -205,7 +205,7 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 		mSeekSection.addView(mNotesContainer);
 
 		//TODO remove
-		mNotesContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.alpha_red));
+//		mNotesContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.alpha_red));
 
 		mNotesContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
@@ -272,7 +272,7 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 	private void addClassNoteToPlayer(ClassNote classNote) {
 		ImageView iv = new ImageView(this);
 		iv.setImageResource(R.drawable.ic_edit_location_white_24dp);
-		iv.setBackgroundColor(ContextCompat.getColor(this, R.color.alpha_white));
+//		iv.setBackgroundColor(ContextCompat.getColor(this, R.color.alpha_white));
 
 		int classNoteIconSize = (int) getResources().getDimension(R.dimen.class_note_icon_size);
 
@@ -323,6 +323,8 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 				//TODO have some progress spinner which dismisses when next page url is not null?
 
 				loadTracksIntoAdapter();
+
+				getAudioFeaturesForTracks();
 			}
 
 			@Override
@@ -332,6 +334,26 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 			}
 
 		});
+	}
+
+	private void getAudioFeaturesForTracks() {
+		SpotifyApiHelper helper = new SpotifyApiHelper(this);
+		for(final SpotifyPlaylistTrack track : mPlaylistTracks) {
+			helper.getTrackAudioFeatures(track.getUri().split(":")[2], new VolleyRequestListener<SpotifyAudioFeatures>() {
+
+				@Override
+				public void onResponse(SpotifyAudioFeatures response) {
+					track.setAudioFeatures(response);
+					mTracksAdapter.itemChanged(track);
+				}
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					Print.log("error getting audio information for track", track.getName());
+				}
+
+			});
+		}
 	}
 
 	private void loadTracksIntoAdapter() {

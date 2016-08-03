@@ -12,6 +12,7 @@ public class SpotifyPlaylistTrack {
 	private long mDuration;
 	private String mUri;
 	private String mImageUrl;
+	private SpotifyAudioFeatures mAudioFeatures;
 
 	private ArrayList<ClassNote> mClassNotes = new ArrayList<>();
 
@@ -68,5 +69,13 @@ public class SpotifyPlaylistTrack {
 
 	public void setImageUrl(String imageUrl) {
 		mImageUrl = imageUrl;
+	}
+
+	public SpotifyAudioFeatures getAudioFeatures() {
+		return mAudioFeatures;
+	}
+
+	public void setAudioFeatures(SpotifyAudioFeatures audioFeatures) {
+		mAudioFeatures = audioFeatures;
 	}
 }

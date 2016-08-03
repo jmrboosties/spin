@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.spinclass.R;
+import com.spinclass.model.SpotifyAudioFeatures;
 import com.spinclass.model.SpotifyPlaylistTrack;
 import com.spinclass.util.Helpbot;
 import com.spinclass.util.Print;
@@ -73,6 +75,10 @@ public class SpotifyTracksAdapter extends RecyclerView.Adapter {
 		mTrackClickListener = trackClickListener;
 	}
 
+	public void itemChanged(SpotifyPlaylistTrack track) {
+		notifyItemChanged(mSpotifyTracks.indexOf(track));
+	}
+
 	public class TrackViewHolder extends RecyclerView.ViewHolder {
 
 		private TextView mTitle;
@@ -80,6 +86,9 @@ public class SpotifyTracksAdapter extends RecyclerView.Adapter {
 		private TextView mNotesCount;
 		private TextView mOrder;
 		private TextView mDuration;
+		private TextView mBpm;
+		private ProgressBar mProgressBar;
+		private View mBpmContainer;
 
 		public TrackViewHolder(View itemView) {
 			super(itemView);
@@ -89,6 +98,9 @@ public class SpotifyTracksAdapter extends RecyclerView.Adapter {
 			mNotesCount = (TextView) itemView.findViewById(R.id.lst_notes_count);
 			mOrder = (TextView) itemView.findViewById(R.id.lst_order);
 			mDuration = (TextView) itemView.findViewById(R.id.lst_duration);
+			mBpm = (TextView) itemView.findViewById(R.id.lst_bpm);
+			mProgressBar = (ProgressBar) itemView.findViewById(R.id.progress);
+			mBpmContainer = itemView.findViewById(R.id.lst_bpm_container);
 
 			itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -99,14 +111,42 @@ public class SpotifyTracksAdapter extends RecyclerView.Adapter {
 				}
 
 			});
+
+//			mProgressBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//
+//				@Override
+//				public void onGlobalLayout() {
+//					mProgressBar.getLayoutParams().width = mBpmContainer.getWidth();
+//					mProgressBar.getLayoutParams().height = mBpmContainer.getWidth();
+//
+//					Print.log("new params", mProgressBar.getLayoutParams().width, mProgressBar.getLayoutParams().height);
+//
+//					mProgressBar.requestLayout();
+//
+//					mProgressBar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//				}
+//
+//			});
 		}
 
 		public void buildItem() {
 			mTitle.setText(mSpotifyTracks.get(getAdapterPosition()).getName());
 			mArtist.setText(mSpotifyTracks.get(getAdapterPosition()).getArtist());
-			mNotesCount.setText(String.valueOf(mSpotifyTracks.get(getAdapterPosition()).getClassNotes().size()));
+			mNotesCount.setText(mContext.getString(R.string.notes_count, mSpotifyTracks.get(getAdapterPosition()).getClassNotes().size()));
 			mOrder.setText(String.valueOf(getAdapterPosition() + 1));
 			mDuration.setText(Helpbot.getDurationTimestampFromMillis(mSpotifyTracks.get(getAdapterPosition()).getDuration()));
+
+			SpotifyAudioFeatures audioFeatures = mSpotifyTracks.get(getAdapterPosition()).getAudioFeatures();
+			if(audioFeatures != null) {
+				mBpm.setText(String.valueOf(Math.round(audioFeatures.getBpm())));
+
+				mProgressBar.setVisibility(View.GONE);
+				mBpmContainer.setVisibility(View.VISIBLE);
+			}
+			else {
+				mProgressBar.setVisibility(View.VISIBLE);
+				mBpmContainer.setVisibility(View.GONE);
+			}
 
 //			Kahlo.with(mContext).matrixCenterTop().source(mSpotifyTracks.get(getAdapterPosition()).getImageUrl());
 		}

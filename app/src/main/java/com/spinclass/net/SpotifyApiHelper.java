@@ -1,5 +1,6 @@
 package com.spinclass.net;
 
+import com.spinclass.model.SpotifyAudioFeatures;
 import com.spinclass.model.SpotifyPlaylistTrack;
 import com.spinclass.net.model.GetSpotifyPlaylistTracksResponse;
 import com.spinclass.net.model.GetSpotifyPlaylistsResponse;
@@ -72,6 +73,15 @@ public class SpotifyApiHelper {
 		Print.log("get playlist tracks url", url);
 
 		SpotifyVolleyRequester requester = new SpotifyVolleyRequester(mVolleyContext, mAccessToken, GetSpotifyPlaylistTracksResponse.class);
+		requester.makeGetRequest(url, listener);
+	}
+
+	public void getTrackAudioFeatures(String trackId, VolleyRequestListener<SpotifyAudioFeatures> listener) {
+		String url = BASE_URL + "audio-features/" + trackId;
+
+		Print.log("audio features url", url);
+
+		SpotifyVolleyRequester requester = new SpotifyVolleyRequester(mVolleyContext, mAccessToken, SpotifyAudioFeatures.class);
 		requester.makeGetRequest(url, listener);
 	}
 

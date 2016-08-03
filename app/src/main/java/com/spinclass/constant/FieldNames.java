@@ -18,5 +18,6 @@ public class FieldNames {
 	public static final String HREF = "href";
 	public static final String TRACK = "track";
 	public static final String ALBUM = "album";
+	public static final String BPM = "tempo";
 
 }

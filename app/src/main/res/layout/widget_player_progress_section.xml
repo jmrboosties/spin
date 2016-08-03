@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/progress_section"
+	android:layout_width="match_parent"
+	android:layout_height="48dp"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<TextView
+		android:id="@+id/wpps_time_progress"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
+		tools:text="0:30"/>
+
+	<TextView
+		android:id="@+id/wpps_duration"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		tools:text="3:54"/>
+
+	<SeekBar
+		android:id="@+id/wpps_seekbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_toLeftOf="@id/time_remaining"
+		android:layout_toRightOf="@id/time_progress"/>
+
+</RelativeLayout>
