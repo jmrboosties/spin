@@ -11,4 +11,5 @@ public class Constants {
 	//Extra keys
 	public static final String PLAYLIST_TRACKS_URL = "playlist_tracks_url";
 
+	public static final String SPOTIFY_PLAYLIST_EXTRA = "spotify_playlist";
 }

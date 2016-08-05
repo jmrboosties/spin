@@ -2,7 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="#4cb1ad"
+	android:id="@+id/root"
 	xmlns:tools="http://schemas.android.com/tools">
+
+	<com.spinclass.view.ClassTitleView
+		android:id="@+id/class_title_view"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
 
 	<LinearLayout
 		android:id="@+id/player_section"
@@ -17,10 +24,12 @@
 		android:orientation="vertical">
 
 		<com.spinclass.view.PlayerProgressSectionView
+			android:id="@+id/acp_progress_view"
 			android:layout_width="match_parent"
 			android:layout_height="48dp"/>
 
 		<com.spinclass.view.PlayerControlsView
+			android:id="@+id/acp_controls_view"
 			android:layout_width="match_parent"
 			android:layout_height="48dp"/>
 

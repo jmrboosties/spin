@@ -35,4 +35,15 @@ public class PlayerProgressSectionView extends RelativeLayout {
 		mDuration = (TextView) findViewById(R.id.wpps_duration);
 	}
 
+	public SeekBar getSeekBar() {
+		return mSeekBar;
+	}
+
+	public TextView getTimeProgress() {
+		return mTimeProgress;
+	}
+
+	public TextView getDuration() {
+		return mDuration;
+	}
 }

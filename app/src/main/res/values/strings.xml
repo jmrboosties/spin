@@ -10,5 +10,8 @@
 	<string name="new_move_hint">Describe the move here. Try using a brief name you can catch at a glance!</string>
 
 	<string name="bpm">BPM</string>
+	<string name="average_bpm">Average BPM: %s</string>
+
+	<string name="by_author">by %s</string>
 
 </resources>

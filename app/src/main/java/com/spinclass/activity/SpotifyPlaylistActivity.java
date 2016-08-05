@@ -108,8 +108,14 @@ public class SpotifyPlaylistActivity extends AppCompatActivity implements Volley
 	}
 
 	private void handlePlaylistClick(SpotifyPlaylist playlist) {
-		Intent intent = new Intent(this, ClassEditorActivity.class);
-		intent.putExtra(Constants.PLAYLIST_TRACKS_URL, playlist.getTracksUrl());
+		//This is for the editor
+//		Intent intent = new Intent(this, ClassEditorActivity.class);
+//		intent.putExtra(Constants.PLAYLIST_TRACKS_URL, playlist.getTracksUrl());
+//
+//		startActivity(intent);
+
+		Intent intent = new Intent(this, ClassPlayerActivity.class);
+		intent.putExtra(Constants.SPOTIFY_PLAYLIST_EXTRA, playlist);
 
 		startActivity(intent);
 	}

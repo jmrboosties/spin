@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<TextView
+		android:id="@+id/wctc_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:textSize="28dp"
+		tools:text="Hills and Sprints"/>
+
+	<TextView
+		android:id="@+id/wctc_author"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="4dp"
+		android:layout_below="@id/wctc_title"
+		android:textSize="16dp"
+		tools:text="by Brett Ridgway"/>
+
+	<ImageView
+		android:id="@+id/wctc_play_button"
+		android:layout_width="64dp"
+		android:layout_height="64dp"
+		android:background="@drawable/play_button_background"
+		android:layout_centerInParent="true"
+		android:src="@android:drawable/ic_media_play"/>
+
+	<TextView
+		android:id="@+id/wctc_track_count"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_marginTop="16dp"
+		android:textSize="16dp"
+		tools:text="10 tracks"/>
+
+	<TextView
+		android:id="@+id/wctc_duration"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_below="@id/wctc_track_count"
+		android:layout_marginTop="4dp"
+		android:textSize="16dp"
+		tools:text="45:34"/>
+
+	<TextView
+		android:id="@+id/wctc_avg_bpm"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/wctc_duration"
+		android:layout_alignParentRight="true"
+		android:layout_marginTop="4dp"
+		android:textSize="16dp"
+		tools:text="Average BPM: 117"/>
+
+	<!--TODO an animation of a bike going by showing the speed of each song along the bottom denoting the bpms-->
+
+</merge>

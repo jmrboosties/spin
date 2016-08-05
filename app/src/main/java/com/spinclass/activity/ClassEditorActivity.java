@@ -26,6 +26,7 @@ import com.spinclass.net.VolleyRequestListener;
 import com.spinclass.net.model.GetSpotifyPlaylistTracksResponse;
 import com.spinclass.preference.Preferences;
 import com.spinclass.util.Helpbot;
+import com.spinclass.util.PlayerHelper;
 import com.spinclass.util.Print;
 import com.spotify.sdk.android.player.*;
 
@@ -40,6 +41,8 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 	private RelativeLayout mPlayerSection;
 	private RelativeLayout mSeekSection;
 	private FrameLayout mNotesContainer;
+
+	private PlayerHelper mPlayerHelper;
 
 	private Player mPlayer;
 	private String mPlaylistTracksUrl;
@@ -192,10 +195,6 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 
 				//Set player to start from here
 				mPlayer.seekToPosition(progress);
-
-//				Start progress handler again
-//				generateNewPlayerProgressHandler();
-//				mPlayerProgressHandler.execute();
 			}
 
 		});
@@ -391,11 +390,6 @@ public class ClassEditorActivity extends BaseActivity implements ConnectionState
 
 	@Override
 	public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
-		Print.log("event type", eventType.toString());
-		Print.log("player playing", playerState.playing);
-		Print.log("player duration", playerState.durationInMs);
-		Print.log("player position", playerState.positionInMs);
-
 		mSeekBar.setProgress(playerState.positionInMs);
 		mSeekBar.setMax(playerState.durationInMs);
 
