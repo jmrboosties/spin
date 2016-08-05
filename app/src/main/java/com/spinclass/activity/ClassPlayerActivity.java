@@ -131,14 +131,15 @@ public class ClassPlayerActivity extends BaseActivity implements PlayerHelper.Pl
 	private void startCountdown() {
 		String[] messages = {"5", "4", "3", "2", "1"};
 
-		float duration = (60f / mSpotifyPlaylist.getSpotifyTracks().get(0).getAudioFeatures().getBpm()) * 1000;
+		//Get how long each animation should be, simulating the beat of the music
+		float animationBeatDuration = (60f / mSpotifyPlaylist.getSpotifyTracks().get(0).getAudioFeatures().getBpm()) * 1000;
 
-		Print.log("calculated duration", duration);
+		Print.log("calculated duration", animationBeatDuration);
 
 		//Start the player, but pause it immediately
 //		mPlayerHelper.bufferTrack(mSpotifyPlaylist.getSpotifyTracks().get(0).getUri());
 
-		mCountdownHelper = new CountdownHelper(this, mRoot, messages, "Get Ready!", null, (long) duration);
+		mCountdownHelper = new CountdownHelper(this, mRoot, messages, "Get Ready!", null, (long) animationBeatDuration);
 		mCountdownHelper.setCallback(new CountdownHelper.CountdownCallback() {
 
 			@Override
