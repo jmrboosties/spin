@@ -1,8 +1,11 @@
 package com.spinclass.util;
 
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.SeekBar;
+import com.spinclass.interfaces.ClassNote;
 import com.spinclass.model.SpotifyPlaylist;
+import com.spinclass.model.SpotifyPlaylistTrack;
 import com.spinclass.view.PlayerControlsView;
 import com.spinclass.view.PlayerProgressSectionView;
 import com.spotify.sdk.android.player.*;
@@ -262,6 +265,19 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 	@Override
 	public void onPlaybackError(ErrorType errorType, String s) {
 		Print.log("playback error", s);
+	}
+
+	private void addClassNote(final ClassNote classNote, SpotifyPlaylistTrack track) {
+		float progressAsPercentage = (float) classNote.getTimestamp() / (float) track.getDuration();
+
+		mPlayerProgressSectionView.addClassNoteViewToFrameLayout(progressAsPercentage, new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Print.log("class note clicked", classNote.getType() + ": " + classNote.getDescription());
+			}
+
+		});
 	}
 
 	public interface PlayerHelperCallback {

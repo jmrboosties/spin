@@ -10,4 +10,6 @@ public interface ClassNote {
 
 	Type getType();
 
+	String getDescription();
+
 }

@@ -58,43 +58,10 @@ public class SeekbarTest extends BaseActivity {
 		mFrameLayout = (FrameLayout) findViewById(R.id.container);
 		mFrameLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.alpha_red));
 
-		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mFrameLayout.getLayoutParams();
-
-//		mFrameLayout = new FrameLayout(this);
-//		root.addView(mFrameLayout);
-//
-//		mFrameLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.alpha_red));
-//
-//		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mFrameLayout.getLayoutParams();
-//
-//		params.width = FrameLayout.LayoutParams.MATCH_PARENT;
-//		params.height = mSeekBar.getHeight() * 2;
-//
-//		params.addRule(RelativeLayout.ALIGN_BOTTOM, mSeekBar.getId());
-//		params.bottomMargin = mSeekBar.getHeight() / 2 + 6; //TODO this is plus 6 making it a little higher
-//
-//		mFrameLayout.requestLayout();
-
-//		mSeekBar.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * .75f);
-//		mSeekBar.requestLayout();
-
 		mSeekBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
 			@Override
 			public void onGlobalLayout() {
-//				int frameLayoutHeight = seekBar.getHeight() * 2;
-//				Print.log("seekbar height times 2", frameLayoutHeight);
-//
-//				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(seekBar.getWidth(), frameLayoutHeight);
-//				frameLayout.setLayoutParams(params);
-//
-//				Print.log("frame layout y", seekBar.getTop() - frameLayoutHeight);
-//				Print.log("seekbar top", seekBar.getTop());
-//				Print.log("seekbar y", seekBar.getY());
-//
-//				frameLayout.setY(seekBar.getTop() - frameLayoutHeight);
-//				frameLayout.setX(seekBar.getX());
-
 				resizeNotesContainer();
 
 				mSeekBar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -117,17 +84,8 @@ public class SeekbarTest extends BaseActivity {
 	}
 
 	private void resizeNotesContainer() {
-//		int sliderBoundsLeft = mSeekBar.getLeft();
-//		int sliderBoundsRight = mSeekBar.getRight();
-//
-//		Print.log("slider left right bounds", sliderBoundsLeft, sliderBoundsRight);
-
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mFrameLayout.getLayoutParams();
-//		params.addRule(RelativeLayout.ALIGN_BOTTOM, mSeekBar.getId());
-//		params.addRule(RelativeLayout.ALIGN_LEFT, mSeekBar.getId());
-		params.bottomMargin = mSeekBar.getHeight() / 2 + 6; //TODO this is plus 6 making it a little higher
-
-		mFrameLayout.setPadding(mSeekBar.getPaddingLeft(), 0, mSeekBar.getPaddingRight(), 0);
+		params.bottomMargin = mSeekBar.getHeight() / 2;
 
 		mFrameLayout.requestLayout();
 	}
@@ -140,20 +98,14 @@ public class SeekbarTest extends BaseActivity {
 
 		mFrameLayout.addView(view);
 
-//		int progressPositionX = getXOnSeekbarFromProgress(progress);
-
 		int x = mSeekBar.getWidth();
 		Print.log("seekbar width", mSeekBar.getWidth());
 		Print.log("frame layout width", mFrameLayout.getWidth());
 
-		view.setX(mFrameLayout.getWidth() * progressAsPercentage - ((mFrameLayout.getPaddingLeft() + mFrameLayout.getPaddingRight()) * progressAsPercentage) - view.getLayoutParams().width / 2);
+		view.setX(mSeekBar.getPaddingLeft() + mFrameLayout.getWidth() * progressAsPercentage - ((mFrameLayout.getPaddingLeft() + mFrameLayout.getPaddingRight()) * progressAsPercentage) - view.getLayoutParams().width / 2);
 
 		Print.log("added view", view.getX(), view.getY());
 		Print.log("thumb offset?", mSeekBar.getThumbOffset());
-
-//		TextView textView = new TextView(this);
-//		textView.setText("Test");
-//		mFrameLayout.addView(textView);
 	}
 
 //	private int getXOnSeekbarFromProgress(int progress) {

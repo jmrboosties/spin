@@ -17,6 +17,7 @@ public class Move implements ClassNote {
 		return Type.MOVE;
 	}
 
+	@Override
 	public String getDescription() {
 		return mDescription;
 	}
