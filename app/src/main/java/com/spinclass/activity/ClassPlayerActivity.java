@@ -155,7 +155,7 @@ public class ClassPlayerActivity extends BaseActivity implements PlayerHelper.Pl
 
 				//TODO Because of the delay look into queueing this and maybe even firing it off a bit earlier
 //				mPlayerHelper.getPlayer().play(mSpotifyPlaylist.getSpotifyTracks().get(0).getUri());
-				mPlayerHelper.playTrack(mSpotifyPlaylist.getSpotifyTracks().get(0).getUri());
+				mPlayerHelper.playTrack(mSpotifyPlaylist.getSpotifyTracks().get(0)); //TODO play playlist here instead of single song
 
 				animatePlayerSectionUp();
 			}

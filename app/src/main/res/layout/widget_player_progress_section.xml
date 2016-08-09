@@ -33,6 +33,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
 		android:layout_alignBottom="@id/seekbar"
+		android:background="@color/alpha_red"
 		android:layout_toLeftOf="@id/wpps_duration"
 		android:layout_toRightOf="@id/wpps_time_progress"/>
 

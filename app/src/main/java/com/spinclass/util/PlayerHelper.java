@@ -21,9 +21,8 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 	private PlayerProgressHandler mPlayerProgressHandler;
 	private PlayerControlsView mPlayerControlsView;
 
-	private boolean mBufferOnly;
-
 	private SpotifyPlaylist mSpotifyPlaylist;
+	private SpotifyPlaylistTrack mCurrentTrack;
 
 	private void setPlayer(Player player) {
 		mPlayer = player;
@@ -46,7 +45,7 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 		mPlayerControlsView.setControlsCallback(this);
 	}
 
-	public void setSpotifyPlaylist(SpotifyPlaylist playlist) {
+	private void setSpotifyPlaylist(SpotifyPlaylist playlist) {
 		mSpotifyPlaylist = playlist;
 	}
 
@@ -108,17 +107,12 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 
 	}
 
-	public void playBufferedTrack(String uri) {
-		playTrack(uri);
-		mBufferOnly = false;
-	}
-
-	public void playTrack(final String uri) {
+	public void playTrack(final SpotifyPlaylistTrack track) {
 		mPlayer.getPlayerState(new PlayerStateCallback() {
 
 			@Override
 			public void onPlayerState(PlayerState playerState) {
-				if(uri.equals(playerState.trackUri)) {
+				if(track.getUri().equals(playerState.trackUri)) {
 					Print.log("track has same uri");
 
 					if(!playerState.playing) {
@@ -130,7 +124,9 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 				}
 				else {
 					Print.log("existing uri differs, starting over");
-					mPlayer.play(uri);
+
+					mCurrentTrack = track;
+					mPlayer.play(track.getUri());
 				}
 			}
 		});
@@ -147,12 +143,15 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 		mPlayerProgressSectionView.getTimeProgress().setText(Helpbot.getDurationTimestampFromMillis(playerState.positionInMs));
 		mPlayerProgressSectionView.getDuration().setText(Helpbot.getDurationTimestampFromMillis(playerState.durationInMs));
 
-		//TODO says deprecated but still getting track start, use it for now but watch out when updating sdk
-		if(eventType == EventType.TRACK_START && mBufferOnly) {
-			Print.log("pausing track, hopefully it buffers");
-			mPlayer.pause();
-			mPlayer.seekToPosition(0);
-		}
+//		//TODO says deprecated but still getting track start, use it for now but watch out when updating sdk
+//		if(eventType == EventType.TRACK_START && mBufferOnly) {
+//			Print.log("pausing track, hopefully it buffers");
+//			mPlayer.pause();
+//			mPlayer.seekToPosition(0);
+//		}
+
+		if(mCurrentTrack == null || eventType == EventType.TRACK_CHANGED)
+			mCurrentTrack = getTrackFromUri(playerState.trackUri);
 
 		if(eventType == EventType.PLAY || playerState.playing) {
 			Print.log("starting progress handler");
@@ -168,10 +167,28 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 			mPlayerHelperCallback.onPlaybackEvent(eventType, playerState);
 	}
 
+	private SpotifyPlaylistTrack getTrackFromUri(String uri) {
+		if(mSpotifyPlaylist != null) {
+			for(SpotifyPlaylistTrack track : mSpotifyPlaylist.getSpotifyTracks()) {
+				if(track.getUri().equals(uri))
+					return track;
+			}
+
+			return null;
+		}
+		else if(mCurrentTrack != null)
+			return mCurrentTrack;
+		else
+			return null;
+	}
+
 	@Override
 	public void onPlayPauseClicked() {
 		mPlayerControlsView.togglePlayPauseIcon();
+		handleButtonStatus();
+	}
 
+	private void handleButtonStatus() {
 		mPlayer.getPlayerState(new PlayerStateCallback() {
 
 			@Override
@@ -204,9 +221,18 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 		cancelPlayerProgressHandler();
 	}
 
-	public void bufferTrack(String uri) {
-		mPlayer.play(uri);
-		mBufferOnly = true;
+	public void pause() {
+		mPlayer.pause();
+		handleButtonStatus();
+	}
+
+	public void resume() {
+		mPlayer.resume();
+		handleButtonStatus();
+	}
+
+	public void getPlayerState(PlayerStateCallback callback) {
+		mPlayer.getPlayerState(callback);
 	}
 
 	private class PlayerProgressHandler extends AsyncTask<Void, Void, Void> {
@@ -267,7 +293,7 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 		Print.log("playback error", s);
 	}
 
-	private void addClassNote(final ClassNote classNote, SpotifyPlaylistTrack track) {
+	public void addClassNote(final ClassNote classNote, SpotifyPlaylistTrack track) {
 		float progressAsPercentage = (float) classNote.getTimestamp() / (float) track.getDuration();
 
 		mPlayerProgressSectionView.addClassNoteViewToFrameLayout(progressAsPercentage, new View.OnClickListener() {
@@ -278,6 +304,14 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 			}
 
 		});
+	}
+
+	public SpotifyPlaylistTrack getCurrentTrack() {
+		return mCurrentTrack;
+	}
+
+	public SpotifyPlaylist getSpotifyPlaylist() {
+		return mSpotifyPlaylist;
 	}
 
 	public interface PlayerHelperCallback {
@@ -310,8 +344,24 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 			return this;
 		}
 
+		public Builder setSpotifyPlaylist(SpotifyPlaylist spotifyPlaylist) {
+			mPlayerHelper.setSpotifyPlaylist(spotifyPlaylist);
+			return this;
+		}
+
+		public Builder setSpotifyTrack(SpotifyPlaylistTrack track) {
+			mPlayerHelper.mCurrentTrack = track;
+			return this;
+		}
+
 		public PlayerHelper build() {
 			//TODO check to make sure all necessary components are present
+			mPlayerHelper.build();
+
+//			if(mPlayerHelper.mCurrentTrack == null && mPlayerHelper.mSpotifyPlaylist == null)
+//				throw new NullPointerException("missing track and playlist, provide one");
+//			else if(mPlayerHelper.mCurrentTrack != null && mPlayerHelper.mSpotifyPlaylist != null)
+//				throw new IllegalArgumentException("don't provide both track and playlist, only one");
 
 			return mPlayerHelper;
 		}
