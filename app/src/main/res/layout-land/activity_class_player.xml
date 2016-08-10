@@ -26,7 +26,7 @@
 		<com.spinclass.view.PlayerProgressSectionView
 			android:id="@+id/acp_progress_view"
 			android:layout_width="match_parent"
-			android:layout_height="48dp"/>
+			android:layout_height="56dp"/>
 
 		<com.spinclass.view.PlayerControlsView
 			android:id="@+id/acp_controls_view"

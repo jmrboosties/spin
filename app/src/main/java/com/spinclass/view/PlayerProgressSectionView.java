@@ -3,7 +3,6 @@ package com.spinclass.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.*;
 import com.spinclass.R;
@@ -53,6 +52,8 @@ public class PlayerProgressSectionView extends RelativeLayout {
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNotesSection.getLayoutParams();
 		params.bottomMargin = mSeekBar.getHeight() / 2;
 
+//		mNotesSection.setTranslationY(-getResources().getDimension(R.dimen.eight_dp));
+
 		mNotesSection.requestLayout();
 	}
 
@@ -60,17 +61,18 @@ public class PlayerProgressSectionView extends RelativeLayout {
 		ImageView iv = new ImageView(getContext());
 		iv.setImageResource(R.drawable.ic_edit_location_white_24dp);
 
-		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(20, ViewGroup.LayoutParams.MATCH_PARENT);
+		int dimens = (int) getResources().getDimension(R.dimen.class_note_icon_size);
+
+		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(dimens, dimens);
 		iv.setLayoutParams(params);
 
 		mNotesSection.addView(iv);
 
 		iv.setX(mSeekBar.getPaddingLeft() + mNotesSection.getWidth() * progressAsPercentage
-				- ((mNotesSection.getPaddingLeft() + mNotesSection.getPaddingRight()) * progressAsPercentage)
+				- ((mSeekBar.getPaddingLeft() + mSeekBar.getPaddingRight()) * progressAsPercentage)
 				- iv.getLayoutParams().width / 2);
 
 		Print.log("added view @", iv.getX());
-
 
 		iv.setOnClickListener(classNoteClickedListener);
 	}

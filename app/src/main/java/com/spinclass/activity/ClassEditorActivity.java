@@ -241,6 +241,7 @@ public class ClassEditorActivity extends BaseActivity implements PlayerHelper.Pl
 //	}
 
 	private void openNewMoveDialog() {
+		mPlayerHelper.pause();
 		mPlayerHelper.getPlayerState(new PlayerStateCallback() {
 
 			@Override
@@ -261,7 +262,7 @@ public class ClassEditorActivity extends BaseActivity implements PlayerHelper.Pl
 						mPlayerHelper.addClassNote(move, mPlayerHelper.getCurrentTrack());
 
 						//Resume
-						mPlayerHelper.resume();
+						mPlayerHelper.resume(); //TODO issue here?
 					}
 
 				});

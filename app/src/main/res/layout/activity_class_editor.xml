@@ -68,7 +68,7 @@
 	<RelativeLayout
 		android:id="@+id/player_section"
 		android:layout_width="match_parent"
-		android:layout_height="142dp"
+		android:layout_height="150dp"
 		android:layout_alignParentBottom="true"
 		android:background="#858aff"
 		android:paddingLeft="8dp"
@@ -86,7 +86,7 @@
 		<com.spinclass.view.PlayerProgressSectionView
 			android:id="@+id/ace_progress_view"
 			android:layout_width="match_parent"
-			android:layout_height="48dp"
+			android:layout_height="56dp"
 			android:layout_above="@id/ace_controls_view"/>
 
 		<ImageView

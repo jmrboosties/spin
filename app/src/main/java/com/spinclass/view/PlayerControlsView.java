@@ -38,6 +38,7 @@ public class PlayerControlsView extends RelativeLayout {
 		mBack = (ImageView) findViewById(R.id.pcs_back);
 		mNext = (ImageView) findViewById(R.id.pcs_next);
 
+		//TODO press and hold to pause for all of these buttons
 		mPlayPauseButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -87,9 +88,19 @@ public class PlayerControlsView extends RelativeLayout {
 
 	public void togglePlayPauseIcon() {
 		if(mPlayIconDisplayed)
-			mPlayPauseButton.setImageResource(android.R.drawable.ic_media_pause);
+			showPauseIcon();
 		else
-			mPlayPauseButton.setImageResource(android.R.drawable.ic_media_play);
+			showPlayIcon();
+	}
+
+	public void showPlayIcon() {
+		mPlayPauseButton.setImageResource(android.R.drawable.ic_media_play);
+		mPlayIconDisplayed = true;
+	}
+
+	public void showPauseIcon() {
+		mPlayPauseButton.setImageResource(android.R.drawable.ic_media_pause);
+		mPlayIconDisplayed = false;
 	}
 
 	public interface ControlsCallback {

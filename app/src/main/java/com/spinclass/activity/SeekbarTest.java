@@ -75,6 +75,7 @@ public class SeekbarTest extends BaseActivity {
 			public void onClick(View v) {
 				float progressAsPercentage = (float) mSeekBar.getProgress() / (float) mSeekBar.getMax();
 
+				Print.log("progress, max", mSeekBar.getProgress(), mSeekBar.getMax());
 				Print.log("progress as percentage", progressAsPercentage);
 
 				addViewToFrameLayout(progressAsPercentage);
@@ -87,6 +88,8 @@ public class SeekbarTest extends BaseActivity {
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mFrameLayout.getLayoutParams();
 		params.bottomMargin = mSeekBar.getHeight() / 2;
 
+//		mFrameLayout.setPadding(mSeekBar.getPaddingLeft(), 0, mSeekBar.getPaddingRight(), 0);
+
 		mFrameLayout.requestLayout();
 	}
 
@@ -98,21 +101,10 @@ public class SeekbarTest extends BaseActivity {
 
 		mFrameLayout.addView(view);
 
-		int x = mSeekBar.getWidth();
-		Print.log("seekbar width", mSeekBar.getWidth());
-		Print.log("frame layout width", mFrameLayout.getWidth());
+		view.setX(mSeekBar.getPaddingLeft() + mFrameLayout.getWidth() * progressAsPercentage - ((mSeekBar.getPaddingLeft() + mSeekBar.getPaddingRight()) * progressAsPercentage) - view.getLayoutParams().width / 2);
 
-		view.setX(mSeekBar.getPaddingLeft() + mFrameLayout.getWidth() * progressAsPercentage - ((mFrameLayout.getPaddingLeft() + mFrameLayout.getPaddingRight()) * progressAsPercentage) - view.getLayoutParams().width / 2);
-
-		Print.log("added view", view.getX(), view.getY());
-		Print.log("thumb offset?", mSeekBar.getThumbOffset());
+		Print.log("added view", view.getX());
 	}
-
-//	private int getXOnSeekbarFromProgress(int progress) {
-//
-//
-//
-//	}
 
 	private View getMiddleStripeView() {
 		FrameLayout frameLayout = new FrameLayout(this);

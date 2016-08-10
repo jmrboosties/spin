@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.spinclass.R;
 import com.spinclass.base.BaseActivity;
 import com.spinclass.constant.Constants;
+import com.spinclass.model.Move;
 import com.spinclass.model.SpotifyAudioFeatures;
 import com.spinclass.model.SpotifyPlaylist;
 import com.spinclass.model.SpotifyPlaylistTrack;
@@ -183,6 +184,16 @@ public class ClassPlayerActivity extends BaseActivity implements PlayerHelper.Pl
 			@Override
 			public void onResponse(GetSpotifyPlaylistTracksResponse response) {
 				mSpotifyPlaylist.addTracks(response.getSpotifyTracks());
+
+				//TODO temp data
+				for(SpotifyPlaylistTrack track : response.getSpotifyTracks()) {
+					Move move = new Move();
+
+					move.setTimeStamp(track.getDuration() * (response.getSpotifyTracks().indexOf(track) + 1) / response.getSpotifyTracks().size());
+					move.setDescription("Sample Note for " + track.getName());
+
+					track.addClassNote(move);
+				}
 
 				if(response.getNextPageUrl() != null)
 					getPlaylistTracks(response.getNextPageUrl());

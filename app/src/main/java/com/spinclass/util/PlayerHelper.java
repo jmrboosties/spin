@@ -78,9 +78,9 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 		});
 	}
 
-	public Player getPlayer() {
-		return mPlayer;
-	}
+//	public Player getPlayer() {
+//		return mPlayer;
+//	}
 
 	@Override
 	public void onLoggedIn() {
@@ -128,6 +128,8 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 					mCurrentTrack = track;
 					mPlayer.play(track.getUri());
 				}
+
+				mPlayerControlsView.showPauseIcon();
 			}
 		});
 	}
@@ -150,8 +152,10 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 //			mPlayer.seekToPosition(0);
 //		}
 
-		if(mCurrentTrack == null || eventType == EventType.TRACK_CHANGED)
+		if(mCurrentTrack == null || eventType == EventType.TRACK_CHANGED) {
 			mCurrentTrack = getTrackFromUri(playerState.trackUri);
+			displayClassNotes();
+		}
 
 		if(eventType == EventType.PLAY || playerState.playing) {
 			Print.log("starting progress handler");
@@ -165,6 +169,11 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 
 		if(mPlayerHelperCallback != null)
 			mPlayerHelperCallback.onPlaybackEvent(eventType, playerState);
+	}
+
+	private void displayClassNotes() {
+		for(final ClassNote note : mCurrentTrack.getClassNotes())
+			addClassNote(note, mCurrentTrack);
 	}
 
 	private SpotifyPlaylistTrack getTrackFromUri(String uri) {
@@ -184,20 +193,15 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 
 	@Override
 	public void onPlayPauseClicked() {
-		mPlayerControlsView.togglePlayPauseIcon();
-		handleButtonStatus();
-	}
-
-	private void handleButtonStatus() {
 		mPlayer.getPlayerState(new PlayerStateCallback() {
 
 			@Override
 			public void onPlayerState(PlayerState playerState) {
 				if(playerState.trackUri != null) {
 					if(playerState.playing)
-						mPlayer.pause();
+						pause();
 					else
-						mPlayer.resume();
+						resume();
 				}
 				else {
 					//TODO pick first off list and beign playing it
@@ -223,12 +227,12 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 
 	public void pause() {
 		mPlayer.pause();
-		handleButtonStatus();
+		mPlayerControlsView.showPlayIcon();
 	}
 
 	public void resume() {
 		mPlayer.resume();
-		handleButtonStatus();
+		mPlayerControlsView.showPauseIcon();
 	}
 
 	public void getPlayerState(PlayerStateCallback callback) {
@@ -295,6 +299,7 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 
 	public void addClassNote(final ClassNote classNote, SpotifyPlaylistTrack track) {
 		float progressAsPercentage = (float) classNote.getTimestamp() / (float) track.getDuration();
+		Print.log("progress as percentage for classnote", progressAsPercentage);
 
 		mPlayerProgressSectionView.addClassNoteViewToFrameLayout(progressAsPercentage, new View.OnClickListener() {
 
@@ -351,6 +356,7 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 
 		public Builder setSpotifyTrack(SpotifyPlaylistTrack track) {
 			mPlayerHelper.mCurrentTrack = track;
+			mPlayerHelper.displayClassNotes();
 			return this;
 		}
 
