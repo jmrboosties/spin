@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.spinclass.R;
 import com.spinclass.base.BaseActivity;
 import com.spinclass.constant.Constants;
+import com.spinclass.interfaces.ClassNote;
 import com.spinclass.model.Move;
 import com.spinclass.model.SpotifyAudioFeatures;
 import com.spinclass.model.SpotifyPlaylist;
@@ -129,39 +130,57 @@ public class ClassPlayerActivity extends BaseActivity implements PlayerHelper.Pl
 		animator.start();
 	}
 
-	private void startCountdown() {
-		String[] messages = {"5", "4", "3", "2", "1"};
+//	private void startCountdown() {
+//		String[] messages = {"5", "4", "3", "2", "1"};
+//
+//		//Get how long each animation should be, simulating the beat of the music
+//		float animationBeatDuration = (60f / mSpotifyPlaylist.getSpotifyTracks().get(0).getAudioFeatures().getBpm()) * 1000;
+//
+//		Print.log("calculated duration", animationBeatDuration);
+//
+//		//Start the player, but pause it immediately
+////		mPlayerHelper.bufferTrack(mSpotifyPlaylist.getSpotifyTracks().get(0).getUri());
+//
+//		mCountdownHelper = new CountdownHelper(this, mRoot, messages, "Get Ready!", null, (long) animationBeatDuration);
+//		mCountdownHelper.setCallback(new CountdownHelper.CountdownCallback() {
+//
+//			@Override
+//			public void onCountdownAnimationFinished(int i) {
+////				//TODO Give it 4 secs to buffer? wish there was a better way
+////				if(i == 4)
+////					mPlayerHelper.playBufferedTrack(mSpotifyPlaylist.getSpotifyTracks().get(0).getUri());
+//			}
+//
+//			@Override
+//			public void onFinished() {
+//				Print.log("on finished");
+//
+//				//TODO Because of the delay look into queueing this and maybe even firing it off a bit earlier
+////				mPlayerHelper.getPlayer().play(mSpotifyPlaylist.getSpotifyTracks().get(0).getUri());
+//				mPlayerHelper.playTrack(mSpotifyPlaylist.getSpotifyTracks().get(0)); //TODO play playlist here instead of single song
+//
+//				animatePlayerSectionUp();
+//			}
+//
+//		});
+//
+//		mCountdownHelper.start();
+//	}
+
+	private void scheduleNote(ClassNote classNote) {
+
+	}
+
+	private void animateCountdownToMessage(String message, CountdownHelper.CountdownCallback callback) {
+		String[] messages = {"3", "2", "1"};
 
 		//Get how long each animation should be, simulating the beat of the music
-		float animationBeatDuration = (60f / mSpotifyPlaylist.getSpotifyTracks().get(0).getAudioFeatures().getBpm()) * 1000;
+		float animationBeatDuration = (60f / mPlayerHelper.getCurrentTrack().getAudioFeatures().getBpm()) * 1000;
 
 		Print.log("calculated duration", animationBeatDuration);
 
-		//Start the player, but pause it immediately
-//		mPlayerHelper.bufferTrack(mSpotifyPlaylist.getSpotifyTracks().get(0).getUri());
-
 		mCountdownHelper = new CountdownHelper(this, mRoot, messages, "Get Ready!", null, (long) animationBeatDuration);
-		mCountdownHelper.setCallback(new CountdownHelper.CountdownCallback() {
-
-			@Override
-			public void onCountdownAnimationFinished(int i) {
-//				//TODO Give it 4 secs to buffer? wish there was a better way
-//				if(i == 4)
-//					mPlayerHelper.playBufferedTrack(mSpotifyPlaylist.getSpotifyTracks().get(0).getUri());
-			}
-
-			@Override
-			public void onFinished() {
-				Print.log("on finished");
-
-				//TODO Because of the delay look into queueing this and maybe even firing it off a bit earlier
-//				mPlayerHelper.getPlayer().play(mSpotifyPlaylist.getSpotifyTracks().get(0).getUri());
-				mPlayerHelper.playTrack(mSpotifyPlaylist.getSpotifyTracks().get(0)); //TODO play playlist here instead of single song
-
-				animatePlayerSectionUp();
-			}
-
-		});
+		mCountdownHelper.setCallback(callback);
 
 		mCountdownHelper.start();
 	}

@@ -102,19 +102,24 @@ public class SpotifyPlaylistActivity extends AppCompatActivity implements Volley
 				handlePlaylistClick(playlist);
 			}
 
+			@Override
+			public void onPlaylistLongClicked(SpotifyPlaylist playlist) {
+				handlePlaylistLongClick(playlist);
+			}
+
 		});
 
 		recyclerView.setAdapter(mAdapter);
 	}
 
-	private void handlePlaylistClick(SpotifyPlaylist playlist) {
-		//This is for the editor
-//		Intent intent = new Intent(this, ClassEditorActivity.class);
-//		intent.putExtra(Constants.PLAYLIST_TRACKS_URL, playlist.getTracksUrl());
-//
-//		startActivity(intent);
+	private void handlePlaylistLongClick(SpotifyPlaylist playlist) {
+		Intent intent = new Intent(this, ClassEditorActivity.class);
+		intent.putExtra(Constants.PLAYLIST_TRACKS_URL, playlist.getTracksUrl());
 
-		//This is for player
+		startActivity(intent);
+	}
+
+	private void handlePlaylistClick(SpotifyPlaylist playlist) {
 		Intent intent = new Intent(this, ClassPlayerActivity.class);
 		intent.putExtra(Constants.SPOTIFY_PLAYLIST_EXTRA, playlist);
 

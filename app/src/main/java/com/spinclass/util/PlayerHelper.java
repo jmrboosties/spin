@@ -145,13 +145,6 @@ public class PlayerHelper implements ConnectionStateCallback, PlayerNotification
 		mPlayerProgressSectionView.getTimeProgress().setText(Helpbot.getDurationTimestampFromMillis(playerState.positionInMs));
 		mPlayerProgressSectionView.getDuration().setText(Helpbot.getDurationTimestampFromMillis(playerState.durationInMs));
 
-//		//TODO says deprecated but still getting track start, use it for now but watch out when updating sdk
-//		if(eventType == EventType.TRACK_START && mBufferOnly) {
-//			Print.log("pausing track, hopefully it buffers");
-//			mPlayer.pause();
-//			mPlayer.seekToPosition(0);
-//		}
-
 		if(mCurrentTrack == null || eventType == EventType.TRACK_CHANGED) {
 			mCurrentTrack = getTrackFromUri(playerState.trackUri);
 			displayClassNotes();

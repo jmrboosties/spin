@@ -67,6 +67,20 @@ public class SpotifyPlaylistAdapter extends RecyclerView.Adapter {
 				}
 
 			});
+
+			itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+				@Override
+				public boolean onLongClick(View v) {
+					if(mOnPlaylistClickedListener != null) {
+						mOnPlaylistClickedListener.onPlaylistLongClicked(mSpotifyPlaylists.get(getAdapterPosition()));
+						return true;
+					}
+					else
+						return false;
+				}
+
+			});
 		}
 
 		public void buildItem() {
@@ -79,6 +93,8 @@ public class SpotifyPlaylistAdapter extends RecyclerView.Adapter {
 	public interface OnPlaylistClickedListener {
 
 		void onPlaylistClicked(SpotifyPlaylist playlist);
+
+		void onPlaylistLongClicked(SpotifyPlaylist playlist);
 
 	}
 

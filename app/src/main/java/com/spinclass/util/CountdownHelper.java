@@ -136,8 +136,8 @@ public class CountdownHelper {
 				mRoot.removeView(tv);
 
 				if(mCallback != null) {
-					if(i >= 0)
-						mCallback.onCountdownAnimationFinished(i);
+//					if(i >= 0)
+//						mCallback.onCountdownAnimationFinished(i);
 
 					if(last)
 						mCallback.onFinished();
@@ -155,7 +155,7 @@ public class CountdownHelper {
 
 	public interface CountdownCallback {
 
-		void onCountdownAnimationFinished(int i);
+//		void onCountdownAnimationFinished(int i);
 
 		void onFinished();
 
